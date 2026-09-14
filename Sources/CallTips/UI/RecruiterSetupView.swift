@@ -22,6 +22,12 @@ struct RecruiterSetupView: View {
                     .font(.system(size: 10, design: .monospaced))
                     .foregroundStyle(.tertiary)
                 Spacer()
+                if step == .input {
+                    Button("⚡ Демо") { loadDemo() }
+                        .buttonStyle(.plain)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 if step == .plan {
                     Button("← Назад") { step = .input }
                         .buttonStyle(.plain)
@@ -210,6 +216,42 @@ struct RecruiterSetupView: View {
     }
 
     // MARK: – Helpers
+
+    private func loadDemo() {
+        session.candidateName    = "Sam Altman"
+        session.interviewDuration = 30
+        session.primaryLanguage  = "en"
+        session.secondaryLanguage = "ru"
+        session.resumeText = """
+        Sam Altman — CEO of OpenAI (2019–present, returned 2023 after brief ouster).
+        Previously President of Y Combinator (2014–2019), invested in Stripe, Airbnb, Reddit.
+        Co-founded Loopt (location sharing app, acquired 2012). Board member at Reddit.
+        Known for: scaling AI products from research to hundreds of millions of users,
+        fundraising ($10B+ from Microsoft, $6.6B Series C), public AI policy advocacy.
+        Technical background: CS at Stanford (dropped out), hobbyist pilot, nuclear energy investor.
+        Recently launched GPT-4o, Sora, ChatGPT Enterprise. Believes in AGI within a few years.
+        """
+        session.jobDescription = """
+        xAI — Vibe Coder (Senior)
+
+        We're building Grok and the infrastructure behind it. You'll ship features end-to-end —
+        from model evals to the product surface — guided by vibes more than specs.
+
+        What you'll do:
+        • Write code that makes Grok smarter, faster, and more fun to use
+        • Own features: idea → prototype → prod, often same day
+        • Pair with researchers to productize new capabilities as they land
+        • Move fast, break things responsibly, fix them faster
+
+        Stack: Python, Rust, CUDA, React. We don't care which — use what ships.
+
+        You: shipped something real, have strong opinions on UX and model behavior,
+        comfortable in ambiguity, thrive when the spec is a Slack message.
+        Bonus: experience with LLM fine-tuning, evals, or inference optimization.
+
+        Location: Bay Area (on-site). Comp: top of market + xAI equity.
+        """
+    }
 
     private func generatePlan() async {
         isGenerating = true
