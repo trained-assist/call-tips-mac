@@ -116,6 +116,12 @@ final class CallController: ObservableObject {
     // Throttle: every 2 final utterances
     private var utterancesSinceLastTip = 0
 
+    func requestKeywordTip(session: CallSession, keyword: String) async {
+        if let tips = await coachEngine?.requestTips(session: session, keyword: keyword), !tips.isEmpty {
+            session.setTips(tips)
+        }
+    }
+
     private func maybeFetchTips(session: CallSession) async {
         utterancesSinceLastTip += 1
         guard utterancesSinceLastTip >= 2 else { return }

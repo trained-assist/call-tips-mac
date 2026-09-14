@@ -40,7 +40,11 @@ struct CallTipsApp: App {
     private func startCall() async {
         isRecording = true
         setupController.hide()
-        overlayController.show(session: session) { Task { await stopCall() } }
+        overlayController.show(
+            session: session,
+            onKeywordSubmit: { kw in Task { await callController.requestKeywordTip(session: session, keyword: kw) } },
+            onStop: { Task { await stopCall() } }
+        )
         await callController.startCall(session: session)
     }
 

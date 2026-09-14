@@ -3,9 +3,11 @@ import SwiftUI
 // Floating HUD — always on top, positioned at top of screen near webcam.
 struct OverlayView: View {
     @ObservedObject var session: CallSession
+    var onKeywordSubmit: (String) -> Void
     var onStop: () -> Void
 
     @State private var activeTab: Tab = .tips
+    @State private var keyword: String = ""
 
     enum Tab { case transcript, tips }
 
@@ -86,24 +88,63 @@ struct OverlayView: View {
     // MARK: – Tips tab
 
     private var tipsTab: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if session.latestTips.isEmpty {
-                HStack {
-                    Spacer()
-                    Text("Слушаю...")
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                        .padding(16)
-                    Spacer()
+        VStack(alignment: .leading, spacing: 0) {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 6) {
+                        ForEach(session.allTips.reversed()) { tip in
+                            TipCard(tip: tip).id(tip.id)
+                        }
+                        if session.allTips.isEmpty {
+                            HStack {
+                                Spacer()
+                                Text("Слушаю...")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                                    .padding(16)
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(10)
                 }
-            } else {
-                ForEach(session.latestTips) { tip in
-                    TipCard(tip: tip)
+                .frame(maxHeight: 300)
+                .onChange(of: session.allTips.count) { _ in
+                    if let newest = session.allTips.last {
+                        withAnimation { proxy.scrollTo(newest.id, anchor: .top) }
+                    }
                 }
             }
+            Divider()
+            keywordBar
         }
-        .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var keywordBar: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "magnifyingglass").font(.caption).foregroundStyle(.secondary)
+            TextField("Тема для вопроса…", text: $keyword)
+                .font(.caption)
+                .textFieldStyle(.plain)
+                .onSubmit { submitKeyword() }
+            if !keyword.isEmpty {
+                Button(action: submitKeyword) {
+                    Image(systemName: "arrow.up.circle.fill")
+                        .foregroundStyle(Color.accentColor)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+    }
+
+    private func submitKeyword() {
+        let kw = keyword.trimmingCharacters(in: .whitespaces)
+        guard !kw.isEmpty else { return }
+        onKeywordSubmit(kw)
+        keyword = ""
     }
 
     // MARK: – Transcript tab

@@ -6,8 +6,8 @@ final class CoachEngine {
     init(apiKey: String) { self.apiKey = apiKey }
 
     @MainActor
-    func requestTips(session: CallSession) async -> [CoachingTip] {
-        let prompt = buildPrompt(session: session)
+    func requestTips(session: CallSession, keyword: String? = nil) async -> [CoachingTip] {
+        let prompt = buildPrompt(session: session, keyword: keyword)
         guard let json = await callOpenRouter(prompt: prompt) else { return [] }
         guard let data = json.data(using: .utf8),
               let resp = try? JSONDecoder().decode(TipsResponse.self, from: data) else { return [] }
@@ -15,14 +15,17 @@ final class CoachEngine {
     }
 
     @MainActor
-    private func buildPrompt(session: CallSession) -> String {
-        """
+    private func buildPrompt(session: CallSession, keyword: String? = nil) -> String {
+        let keywordInstruction = keyword.map { kw in
+            "\nВАЖНО: Рекрутер хочет задать вопрос про «\(kw)». Сделай quickStart именно вопросом про это, игнорируя текущий контекст разговора."
+        } ?? ""
+        return """
         Ты — AI-ассистент технического рекрутера, который ведёт интервью прямо сейчас.
         Кандидат: \(session.candidateName.isEmpty ? "не указан" : session.candidateName)
         Вакансия: \(session.jobDescription.prefix(400))
         Длина интервью: \(session.interviewDuration) мин
 
-        \(session.planContext.isEmpty ? "" : "ПЛАН ИНТЕРВЬЮ:\n\(session.planContext)\n")
+        \(session.planContext.isEmpty ? "" : "ПЛАН ИНТЕРВЬЮ:\n\(session.planContext)\n")\(keywordInstruction)
 
         ПОСЛЕДНИЕ РЕПЛИКИ (Я = рекрутер, Они = кандидат):
         \(session.recentTranscript)

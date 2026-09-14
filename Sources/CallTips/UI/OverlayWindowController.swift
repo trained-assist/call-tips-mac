@@ -7,11 +7,11 @@ import SwiftUI
 final class OverlayWindowController {
     private var window: NSWindow?
 
-    func show(session: CallSession, onStop: @escaping () -> Void) {
+    func show(session: CallSession, onKeywordSubmit: @escaping (String) -> Void, onStop: @escaping () -> Void) {
         guard window == nil else { return }
 
         let content = NSHostingView(rootView:
-            OverlayView(session: session, onStop: onStop)
+            OverlayView(session: session, onKeywordSubmit: onKeywordSubmit, onStop: onStop)
         )
         content.setFrameSize(content.fittingSize)
 
