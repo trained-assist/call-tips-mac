@@ -218,38 +218,46 @@ struct RecruiterSetupView: View {
     // MARK: – Helpers
 
     private func loadDemo() {
-        session.candidateName    = "Sam Altman"
+        session.candidateName     = "Алексей Смирнов"
         session.interviewDuration = 30
-        session.primaryLanguage  = "en"
-        session.secondaryLanguage = "ru"
+        session.primaryLanguage   = "ru"
+        session.secondaryLanguage = "en"
         session.resumeText = """
-        Sam Altman — CEO of OpenAI (2019–present, returned 2023 after brief ouster).
-        Previously President of Y Combinator (2014–2019), invested in Stripe, Airbnb, Reddit.
-        Co-founded Loopt (location sharing app, acquired 2012). Board member at Reddit.
-        Known for: scaling AI products from research to hundreds of millions of users,
-        fundraising ($10B+ from Microsoft, $6.6B Series C), public AI policy advocacy.
-        Technical background: CS at Stanford (dropped out), hobbyist pilot, nuclear energy investor.
-        Recently launched GPT-4o, Sora, ChatGPT Enterprise. Believes in AGI within a few years.
+        Смирнов Алексей Владимирович, 34 года. Программист 1С, опыт 8 лет.
+
+        Опыт работы:
+        • ООО «Торгснаб» (2019–н.в.) — ведущий программист 1С. Поддержка и доработка УТ 11,
+          интеграция с маркетплейсами (Wildberries, Ozon) через HTTP-сервисы, разработка
+          обмена с WMS-системой склада. Команда 3 человека.
+        • ИТ-аутсорс «СофтЛайн» (2016–2019) — программист 1С. Внедрение БП 3.0, ЗУП 3.1
+          на 5 предприятиях, написание отчётов на СКД, обучение пользователей.
+
+        Технологии: 1С:Предприятие 8.3, УТ 11, БП 3.0, ЗУП 3.1, ERP 2.5, СКД, HTTP-сервисы,
+        REST API, COM-соединения, интеграция с банк-клиентом, 1С-Битрикс (базово).
+
+        Образование: МИРЭА, прикладная информатика, 2013.
+        Сертификаты: 1С:Специалист по платформе (2018), 1С:Специалист-консультант УТ (2020).
         """
         session.jobDescription = """
-        xAI — Vibe Coder (Senior)
+        Программист 1С — ООО «Ромашка Ритейл»
 
-        We're building Grok and the infrastructure behind it. You'll ship features end-to-end —
-        from model evals to the product surface — guided by vibes more than specs.
+        Федеральная розничная сеть, 200+ магазинов, оборот 12 млрд/год. Ищем программиста
+        в команду автоматизации (6 человек) для развития учётных систем.
 
-        What you'll do:
-        • Write code that makes Grok smarter, faster, and more fun to use
-        • Own features: idea → prototype → prod, often same day
-        • Pair with researchers to productize new capabilities as they land
-        • Move fast, break things responsibly, fix them faster
+        Задачи:
+        • Доработка и поддержка 1С:УТ 11 и 1С:БП 3.0
+        • Интеграция с онлайн-кассами (ФФД 1.2), ЭДО (СБИС, Диадок)
+        • Разработка обменов с WMS и сайтом на REST/SOAP
+        • Оптимизация медленных запросов, рефакторинг старого кода
+        • Участие в переходе на ERP 2.5 (старт Q3 2025)
 
-        Stack: Python, Rust, CUDA, React. We don't care which — use what ships.
+        Требования:
+        • Опыт от 4 лет на платформе 8.3
+        • Знание УТ 11 или ERP — обязательно
+        • Умение читать и писать запросы к БД, СКД
+        • Опыт интеграций через HTTP-сервисы будет плюсом
 
-        You: shipped something real, have strong opinions on UX and model behavior,
-        comfortable in ambiguity, thrive when the spec is a Slack message.
-        Bonus: experience with LLM fine-tuning, evals, or inference optimization.
-
-        Location: Bay Area (on-site). Comp: top of market + xAI equity.
+        Условия: офис м. Павелецкая, гибрид 3/2, ЗП 150–200к на руки, ДМС, обеды.
         """
     }
 

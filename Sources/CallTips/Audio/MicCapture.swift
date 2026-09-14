@@ -14,8 +14,24 @@ final class MicCapture {
     )!
 
     func start() throws {
+        // Explicitly request mic permission — required when running outside a signed .app bundle
+        let granted = AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
+        if !granted {
+            let semaphore = DispatchSemaphore(value: 0)
+            AVCaptureDevice.requestAccess(for: .audio) { _ in semaphore.signal() }
+            semaphore.wait()
+        }
+
+        guard AVCaptureDevice.authorizationStatus(for: .audio) == .authorized else {
+            throw MicError.permissionDenied
+        }
+
         let input = engine.inputNode
         let nativeFormat = input.outputFormat(forBus: 0)
+
+        guard nativeFormat.channelCount > 0 else {
+            throw MicError.noInputDevice
+        }
 
         converter = AVAudioConverter(from: nativeFormat, to: deepgramFormat)
 
@@ -24,6 +40,16 @@ final class MicCapture {
         }
 
         try engine.start()
+    }
+
+    enum MicError: LocalizedError {
+        case permissionDenied, noInputDevice
+        var errorDescription: String? {
+            switch self {
+            case .permissionDenied: return "Доступ к микрофону запрещён — разреши в Системных настройках → Конфиденциальность → Микрофон"
+            case .noInputDevice:    return "Микрофон не найден"
+            }
+        }
     }
 
     func stop() {
