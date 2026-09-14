@@ -108,7 +108,7 @@ struct OverlayView: View {
                     }
                     .padding(10)
                 }
-                .frame(maxHeight: 300)
+                .frame(maxHeight: .infinity)
                 .onChange(of: session.allTips.count) { _ in
                     if let newest = session.allTips.last {
                         withAnimation { proxy.scrollTo(newest.id, anchor: .top) }
