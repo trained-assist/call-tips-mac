@@ -49,8 +49,8 @@ OPENROUTER_API_KEY=your_openrouter_key_here
 ## Собрать из исходников
 
 ```bash
-git clone https://github.com/recruiting-tools/recruiter-ai-coach
-cd recruiter-ai-coach
+git clone https://github.com/trained-assist/call-tips-mac
+cd call-tips-mac
 
 # API ключи
 cp .env.example .env
